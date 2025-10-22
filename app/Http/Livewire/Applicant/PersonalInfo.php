@@ -79,18 +79,29 @@ class PersonalInfo extends Component
 
     $photoPath = null;
 
-    if ($this->photo && !$this->photo->getError()) {
-        try {
+if ($this->photo instanceof \Livewire\TemporaryUploadedFile) {
+    try {
+        if (!$this->photo->getError()) {
             $photoPath = $this->photo->store('photos', 'public');
-        } catch (\Exception $e) {
-            $this->notification([
-                'title' => 'Upload Error',
-                'description' => 'Failed to upload photo: '.$e->getMessage(),
-                'icon' => 'error',
+        } else {
+            \Log::warning('Photo upload error detected', [
+                'error' => $this->photo->getError(),
+                'filename' => $this->photo->getClientOriginalName() ?? 'unknown'
             ]);
-            return;
         }
+    } catch (\Throwable $e) {
+        \Log::error('Photo upload failed', ['exception' => $e]);
+        $this->notification([
+            'title' => 'Upload Error',
+            'description' => 'Failed to upload photo: '.$e->getMessage(),
+            'icon' => 'error',
+        ]);
+        return;
     }
+} else {
+    \Log::warning('No valid photo uploaded', ['photo' => $this->photo]);
+}
+
 
     PersonalInformation::create(array_merge($validated, [
         'user_id' => auth()->id(),
