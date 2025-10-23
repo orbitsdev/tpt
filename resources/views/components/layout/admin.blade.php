@@ -23,7 +23,9 @@
 </head>
 
 <body class="h-full bg-gray-100 font-poppins admin">
-
+  <div class="bg-red-500 text-white text-center py-3 font-semibold shadow-md animate-pulse rounded-md mx-4 mt-3">
+        🚧 Under Development
+    </div>
   <div>
     <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
     <div class="relative z-40 md:hidden" role="dialog" aria-modal="true">
@@ -379,6 +381,7 @@
           </svg>
         </button>
       </div>
+
       <main class="flex-1">
         {{ $slot }}
       </main>
